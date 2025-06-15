@@ -1,5 +1,5 @@
 <blockquote>
-    <p>{{ .Inner | markdownify }}</p>
+    <p>{{ .Inner | transform.Markdownify }}</p>
     {{- if or (.Get "author") (.Get "source") -}}
     <span class="cite"><span>― </span>
         {{- if .Get "author" -}}

@@ -1,5 +1,5 @@
-{{- $image := .Page.Resources.GetMatch (printf "%s" (.Destination | safeURL)) -}}
-{{- $Permalink := .Destination | relURL | safeURL -}}
+{{- $image := .Page.Resources.GetMatch (printf "%s" (.Destination | transform.SafeURL)) -}}
+{{- $Permalink := .Destination | relURL | transform.SafeURL -}}
 {{- $alt := .PlainText | safeHTML -}}
 {{- $Width := 0 -}}
 {{- $Height := 0 -}}

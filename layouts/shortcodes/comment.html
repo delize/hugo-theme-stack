@@ -1,0 +1,7 @@
+{{- /*
+Backwards compatibility for deprecated comment shortcode.
+The comment shortcode was used to add comments in templates.
+Since it's deprecated, we'll make it a no-op that outputs nothing.
+Usage: {{< comment >}}This is a comment{{< /comment >}}
+*/ -}}
+{{- /* Output nothing - comments should not be visible in the rendered output */ -}}

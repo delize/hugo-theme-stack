@@ -17,7 +17,7 @@
         
                 {{ with $link.image }}
                     {{ $permalink := . }}
-                    {{ with ($.Resources.GetMatch (printf "%s" (. | safeURL))) }}
+                    {{ with ($.Resources.GetMatch (printf "%s" (. | transform.SafeURL))) }}
                         {{ $permalink = .RelPermalink }}
                     {{ end }}
                     <div class="article-image">

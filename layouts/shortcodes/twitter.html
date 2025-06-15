@@ -1,0 +1,24 @@
+{{- /*
+Backwards compatibility for deprecated twitter shortcode.
+Now redirects to X (formerly Twitter).
+Usage: {{< twitter id >}} or {{< twitter user id >}}
+*/ -}}
+{{- $id := "" -}}
+{{- $user := "x" -}}
+
+{{- if eq (len .Params) 1 -}}
+    {{- $id = .Get 0 -}}
+{{- else if ge (len .Params) 2 -}}
+    {{- $user = .Get 0 -}}
+    {{- $id = .Get 1 -}}
+{{- end -}}
+
+{{- if $id -}}
+    {{- $tweetURL := printf "https://x.com/%s/status/%s" $user $id -}}
+    <blockquote class="twitter-tweet">
+        <a href="{{ $tweetURL }}">Loading tweet...</a>
+    </blockquote>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{{- else -}}
+    <p style="color: red;">Error: Twitter shortcode requires a tweet ID.</p>
+{{- end -}}

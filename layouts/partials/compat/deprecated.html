@@ -1,0 +1,35 @@
+{{- /*
+This partial provides backwards compatibility for deprecated Hugo features.
+It can be included in templates to define variables that map old syntax to new.
+*/ -}}
+
+{{- /* Site-level deprecations */ -}}
+{{- if not (isset .Site "Author") -}}
+    {{- $author := .Site.Params.author | default dict -}}
+    {{- $.Site.Scratch.Set "Author" $author -}}
+{{- end -}}
+
+{{- if not (isset .Site "Social") -}}
+    {{- $social := .Site.Params.social | default dict -}}
+    {{- $.Site.Scratch.Set "Social" $social -}}
+{{- end -}}
+
+{{- /* Page-level deprecations */ -}}
+{{- if .Page -}}
+    {{- /* .Page.Lang is deprecated, provide fallback */ -}}
+    {{- if not (isset .Page "Lang") -}}
+        {{- with .Page.Language -}}
+            {{- $.Page.Scratch.Set "Lang" .LanguageCode -}}
+        {{- end -}}
+    {{- end -}}
+    
+    {{- /* .Page.UniqueID fallback (already fixed in templates) */ -}}
+    {{- if not (isset .Page "UniqueID") -}}
+        {{- $.Page.Scratch.Set "UniqueID" .Page.RelPermalink -}}
+    {{- end -}}
+    
+    {{- /* .File.UniqueID fallback */ -}}
+    {{- if and .File (not (isset .File "UniqueID")) -}}
+        {{- $.Page.Scratch.Set "FileUniqueID" .Page.RelPermalink -}}
+    {{- end -}}
+{{- end -}}

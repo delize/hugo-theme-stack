@@ -11,7 +11,7 @@
         <!-- Is an external image -->
         {{ $result = merge $result (dict "permalink" $imageValue) }}
     {{ else }}
-        {{ $pageResourceImage := .Context.Resources.GetMatch (printf "%s" ($imageValue | safeURL)) }}
+        {{ $pageResourceImage := .Context.Resources.GetMatch (printf "%s" ($imageValue | transform.SafeURL)) }}
         
         {{ if $pageResourceImage }}
             <!-- If image is found under page bundle -->
@@ -37,7 +37,7 @@
         {{ $result = merge $result (dict "exists" true) }}
 
         {{ if $defaultImageSetting.local }}
-            {{ $siteResourceImage := resources.GetMatch (printf "%s" ($defaultImageSetting.src | safeURL)) }}
+            {{ $siteResourceImage := resources.GetMatch (printf "%s" ($defaultImageSetting.src | transform.SafeURL)) }}
 
             {{ if $siteResourceImage }}
                 <!-- Try search image under site's assets folder -->

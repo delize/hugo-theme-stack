@@ -1,0 +1,23 @@
+{{- /*
+X (formerly Twitter) shortcode - modern replacement for deprecated twitter shortcode.
+Usage: {{< x id >}} or {{< x user id >}}
+*/ -}}
+{{- $id := "" -}}
+{{- $user := "x" -}}
+
+{{- if eq (len .Params) 1 -}}
+    {{- $id = .Get 0 -}}
+{{- else if ge (len .Params) 2 -}}
+    {{- $user = .Get 0 -}}
+    {{- $id = .Get 1 -}}
+{{- end -}}
+
+{{- if $id -}}
+    {{- $postURL := printf "https://x.com/%s/status/%s" $user $id -}}
+    <blockquote class="twitter-tweet">
+        <a href="{{ $postURL }}">Loading post...</a>
+    </blockquote>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{{- else -}}
+    <p style="color: red;">Error: X shortcode requires a post ID.</p>
+{{- end -}}

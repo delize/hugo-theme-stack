@@ -20,7 +20,7 @@
     <!-- Taxonomy page -->
 
     <!-- Build paginator -->
-    {{ $notHidden := where .Pages "Params.hidden" "!=" true }}
+    {{ $notHidden := where .RegularPages "Params.hidden" "!=" true }}
     {{ $pag := .Paginate ($notHidden) }}
 
     <!-- {TAXONOMY_TYPE}: {TAXONOMY_TERM} -->

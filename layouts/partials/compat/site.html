@@ -1,0 +1,36 @@
+{{- /*
+Provides backwards compatibility for deprecated .Site variables.
+Include this partial at the beginning of templates that might use deprecated site variables.
+*/ -}}
+
+{{- /* .Site.Author compatibility */ -}}
+{{- if and (not .Site.Author) .Site.Params.author -}}
+    {{- .Site.Scratch.Set "compat.author" .Site.Params.author -}}
+{{- end -}}
+
+{{- /* .Site.Social compatibility */ -}}
+{{- if and (not .Site.Social) .Site.Params.social -}}
+    {{- .Site.Scratch.Set "compat.social" .Site.Params.social -}}
+{{- end -}}
+
+{{- /* .Site.LastChange compatibility */ -}}
+{{- if not .Site.LastChange -}}
+    {{- $lastChange := now -}}
+    {{- range first 1 .Site.RegularPages.ByLastmod.Reverse -}}
+        {{- $lastChange = .Lastmod -}}
+    {{- end -}}
+    {{- .Site.Scratch.Set "compat.lastChange" $lastChange -}}
+{{- end -}}
+
+{{- /* Helper functions to access compatibility values */ -}}
+{{- define "compat.site.author" -}}
+    {{- .Site.Author | default (.Site.Scratch.Get "compat.author") -}}
+{{- end -}}
+
+{{- define "compat.site.social" -}}
+    {{- .Site.Social | default (.Site.Scratch.Get "compat.social") -}}
+{{- end -}}
+
+{{- define "compat.site.lastChange" -}}
+    {{- .Site.LastChange | default (.Site.Scratch.Get "compat.lastChange") -}}
+{{- end -}}

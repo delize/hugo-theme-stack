@@ -1,0 +1,17 @@
+{{- /*
+Backwards compatibility for deprecated twitter_simple shortcode.
+Now redirects to X (formerly Twitter).
+Usage: {{< twitter_simple user="username" id="tweet_id" >}}
+*/ -}}
+{{- $id := .Get "id" -}}
+{{- $user := .Get "user" -}}
+
+{{- if and $id $user -}}
+    {{- $tweetURL := printf "https://x.com/%s/status/%s" $user $id -}}
+    <blockquote class="twitter-tweet" data-dnt="true" data-theme="light">
+        <a href="{{ $tweetURL }}">Loading tweet...</a>
+    </blockquote>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{{- else -}}
+    <p style="color: red;">Error: twitter_simple shortcode requires both 'user' and 'id' parameters.</p>
+{{- end -}}

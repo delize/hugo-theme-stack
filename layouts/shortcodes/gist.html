@@ -1,0 +1,38 @@
+{{- /*
+Backwards compatibility for deprecated gist shortcode.
+Usage: {{< gist user id >}} or {{< gist id >}}
+*/ -}}
+{{- $id := "" -}}
+{{- $user := "" -}}
+{{- $file := "" -}}
+
+{{- if eq (len .Params) 1 -}}
+    {{- $id = .Get 0 -}}
+{{- else if eq (len .Params) 2 -}}
+    {{- $user = .Get 0 -}}
+    {{- $id = .Get 1 -}}
+{{- else if eq (len .Params) 3 -}}
+    {{- $user = .Get 0 -}}
+    {{- $id = .Get 1 -}}
+    {{- $file = .Get 2 -}}
+{{- end -}}
+
+{{- if $id -}}
+    {{- $gistURL := "" -}}
+    {{- if $user -}}
+        {{- $gistURL = printf "https://gist.github.com/%s/%s" $user $id -}}
+    {{- else -}}
+        {{- $gistURL = printf "https://gist.github.com/%s" $id -}}
+    {{- end -}}
+    
+    {{- if $file -}}
+        {{- $gistURL = printf "%s#file-%s" $gistURL (replace $file "." "-" | lower) -}}
+    {{- end -}}
+    
+    <script src="{{ $gistURL }}.js{{ with $file }}?file={{ . }}{{ end }}"></script>
+    <noscript>
+        <p>View this gist on GitHub: <a href="{{ $gistURL }}">{{ $gistURL }}</a></p>
+    </noscript>
+{{- else -}}
+    <p style="color: red;">Error: Gist shortcode requires at least a gist ID.</p>
+{{- end -}}
