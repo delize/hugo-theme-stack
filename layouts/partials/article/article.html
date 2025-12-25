@@ -1,5 +1,27 @@
+{{/* Mobile TOC - check if enabled via config (each feature defaults to false) */}}
+{{- $hasTOC := ge (len .TableOfContents) 100 -}}
+
+{{/* Collapsible TOC at top of article */}}
+{{- $mobileTOCCollapsible := default false .Site.Params.article.mobileTOC.collapsible -}}
+{{- .Scratch.Set "MobileTOCCollapsible" (and $mobileTOCCollapsible $hasTOC) -}}
+
+{{/* FAB button */}}
+{{- $mobileTOCFAB := default false .Site.Params.article.mobileTOC.fab -}}
+{{- .Scratch.Set "MobileTOCFAB" (and $mobileTOCFAB $hasTOC) -}}
+
+{{/* Swipe gesture */}}
+{{- $mobileTOCSwipe := default false .Site.Params.article.mobileTOC.swipe -}}
+{{- .Scratch.Set "MobileTOCSwipe" (and $mobileTOCSwipe $hasTOC) -}}
+
+{{/* Panel needed if either FAB or swipe is enabled */}}
+{{- .Scratch.Set "MobileTOCPanel" (or (.Scratch.Get "MobileTOCFAB") (.Scratch.Get "MobileTOCSwipe")) -}}
+
 <article class="{{ if .Params.image }}has-image {{ end }}main-article">
     {{ partial "article/components/header" . }}
+
+    {{ if .Scratch.Get "MobileTOCCollapsible" }}
+        {{ partial "article/components/mobile-toc" . }}
+    {{ end }}
 
     {{ partial "article/components/content" . }}
 
@@ -8,4 +30,10 @@
     {{ if or .Params.math .Site.Params.article.math }}
         {{ partialCached "article/components/math.html" . }}
     {{ end }}
+
 </article>
+
+{{/* Mobile TOC panel - outside article to avoid overflow:hidden clipping */}}
+{{ if .Scratch.Get "MobileTOCPanel" }}
+    {{ partial "article/components/mobile-toc-panel" . }}
+{{ end }}

@@ -459,3 +459,372 @@
         display: inline-block;
     }
 }
+
+// =============================================================================
+// Mobile TOC - Mixins
+// =============================================================================
+
+@mixin mobile-toc-title-style {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--card-text-color-tertiary);
+    letter-spacing: 0.5px;
+}
+
+@mixin mobile-toc-icon($size: 18px) {
+    svg {
+        width: $size;
+        height: $size;
+        stroke-width: 1.6;
+    }
+}
+
+@mixin mobile-toc-hide-desktop {
+    @include respond(lg) {
+        display: none;
+    }
+}
+
+@mixin mobile-toc-reduced-motion {
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+
+// =============================================================================
+// Mobile TOC - Collapsible Container
+// =============================================================================
+
+.mobile-toc-container {
+    display: block;
+    margin: var(--card-padding);
+    margin-bottom: 0;
+    background: var(--body-background);
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+
+    @include mobile-toc-hide-desktop;
+}
+
+.mobile-toc-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--card-text-color-main);
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: left;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: var(--card-background-selected);
+    }
+
+    &[aria-expanded="true"] .mobile-toc-chevron {
+        transform: rotate(180deg);
+    }
+}
+
+.mobile-toc-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    color: var(--accent-color);
+    @include mobile-toc-icon;
+}
+
+.mobile-toc-title {
+    flex: 1;
+    @include mobile-toc-title-style;
+}
+
+.mobile-toc-chevron {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+    color: var(--card-text-color-tertiary);
+    @include mobile-toc-icon;
+}
+
+.mobile-toc-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--card-background);
+
+    &[aria-hidden="false"] {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .widget--toc {
+        border-radius: 0;
+        box-shadow: none;
+
+        #TableOfContents {
+            max-height: none;
+            overflow: visible;
+        }
+    }
+}
+
+// =============================================================================
+// Mobile TOC - Floating Action Button
+// =============================================================================
+
+.mobile-toc-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 20px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background: var(--accent-color);
+    color: var(--accent-color-text);
+    border: none;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-l3);
+    cursor: pointer;
+    z-index: 100;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+    @include mobile-toc-hide-desktop;
+    @include mobile-toc-icon(24px);
+
+    svg {
+        stroke-width: 2;
+    }
+
+    &:hover {
+        box-shadow: var(--shadow-l4);
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        background: var(--accent-color-darker);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+        &:hover {
+            transform: none;
+        }
+    }
+}
+
+// =============================================================================
+// Mobile TOC - Slide-out Panel
+// =============================================================================
+
+.mobile-toc-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+
+    @include respond(lg) {
+        display: none !important;
+    }
+    @include mobile-toc-reduced-motion;
+
+    &[aria-hidden="false"] {
+        display: block;
+        opacity: 1;
+
+        .mobile-toc-panel {
+            transform: translateX(0);
+        }
+    }
+}
+
+.mobile-toc-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85vw;
+    max-width: 320px;
+    background: var(--card-background);
+    box-shadow: var(--shadow-l4);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-top-left-radius: var(--card-border-radius);
+    border-bottom-left-radius: var(--card-border-radius);
+
+    @include mobile-toc-reduced-motion;
+}
+
+.mobile-toc-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--card-padding);
+    padding-bottom: 15px;
+    border-bottom: 1.5px solid var(--card-separator-color);
+    flex-shrink: 0;
+}
+
+.mobile-toc-panel-title {
+    @include mobile-toc-title-style;
+}
+
+.mobile-toc-panel-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: var(--tag-border-radius);
+    cursor: pointer;
+    color: var(--card-text-color-tertiary);
+    transition: color 0.3s ease;
+    outline: none;
+
+    @include mobile-toc-icon(20px);
+
+    &:hover,
+    &:focus {
+        color: var(--card-text-color-main);
+    }
+}
+
+// =============================================================================
+// Mobile TOC - Panel Content (TOC Clone Styles)
+// =============================================================================
+
+.mobile-toc-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--card-padding);
+    padding-top: 15px;
+
+    .toc-panel-wrapper {
+        background-color: var(--body-background);
+        border-radius: var(--card-border-radius);
+        overflow: hidden;
+    }
+
+    .toc-panel-clone {
+        overflow-x: auto;
+
+        ol,
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ol {
+            list-style-type: none;
+            counter-reset: item;
+
+            li a:first-of-type::before {
+                counter-increment: item;
+                content: counters(item, ".") ". ";
+                font-weight: bold;
+                margin-right: 5px;
+            }
+        }
+
+        & > ul {
+            padding: 0 1em;
+        }
+
+        li {
+            margin: 15px 0 15px 20px;
+            padding: 5px;
+
+            & > ol,
+            & > ul {
+                margin-top: 10px;
+                padding-left: 10px;
+                margin-bottom: -5px;
+
+                & > li:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        li.active-class > a {
+            border-left: var(--heading-border-size) solid var(--accent-color);
+            font-weight: bold;
+        }
+
+        ul li.active-class > a {
+            display: block;
+        }
+
+        // Active indicator positioning for each nesting level
+        // Level 0
+        & > ul > li.active-class > a {
+            margin-left: calc(-25px - 1em);
+            padding-left: calc(25px + 1em - var(--heading-border-size));
+        }
+        & > ol > li.active-class > a {
+            margin-left: calc(-9px - 1em);
+            padding-left: calc(9px + 1em - var(--heading-border-size));
+            display: block;
+        }
+
+        // Level 1
+        & > ul > li > ul > li.active-class > a {
+            margin-left: calc(-60px - 1em);
+            padding-left: calc(60px + 1em - var(--heading-border-size));
+        }
+        & > ol > li > ol > li.active-class > a {
+            margin-left: calc(-44px - 1em);
+            padding-left: calc(44px + 1em - var(--heading-border-size));
+            display: block;
+        }
+
+        // Level 2
+        & > ul > li > ul > li > ul > li.active-class > a {
+            margin-left: calc(-95px - 1em);
+            padding-left: calc(95px + 1em - var(--heading-border-size));
+        }
+        & > ol > li > ol > li > ol > li.active-class > a {
+            margin-left: calc(-79px - 1em);
+            padding-left: calc(79px + 1em - var(--heading-border-size));
+            display: block;
+        }
+
+        // Level 3
+        & > ul > li > ul > li > ul > li > ul > li.active-class > a {
+            margin-left: calc(-130px - 1em);
+            padding-left: calc(130px + 1em - var(--heading-border-size));
+        }
+        & > ol > li > ol > li > ol > li > ol > li.active-class > a {
+            margin-left: calc(-114px - 1em);
+            padding-left: calc(114px + 1em - var(--heading-border-size));
+            display: block;
+        }
+
+        a {
+            color: var(--card-text-color-main);
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: var(--accent-color);
+            }
+        }
+    }
+}
+

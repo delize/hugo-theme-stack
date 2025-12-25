@@ -1,0 +1,25 @@
+{{/* Mobile TOC - slide-out panel (and optionally FAB button) */}}
+{{- $fabEnabled := default false .Site.Params.article.mobileTOC.fab -}}
+{{- $swipeEnabled := default false .Site.Params.article.mobileTOC.swipe -}}
+
+{{/* FAB button - only if fab is enabled */}}
+{{ if $fabEnabled }}
+<button class="mobile-toc-fab" id="mobile-toc-fab" aria-label="{{ T "article.tableOfContents" }}">
+    {{ partial "helper/icon" "menu" }}
+</button>
+{{ end }}
+
+{{/* Slide-out panel - rendered if fab or swipe is enabled */}}
+<div class="mobile-toc-overlay" id="mobile-toc-overlay" aria-hidden="true" data-swipe-enabled="{{ $swipeEnabled }}">
+    <div class="mobile-toc-panel" id="mobile-toc-panel">
+        <div class="mobile-toc-panel-header">
+            <span class="mobile-toc-panel-title">{{ T "article.tableOfContents" }}</span>
+            <button class="mobile-toc-panel-close" id="mobile-toc-panel-close" aria-label="Close">
+                {{ partial "helper/icon" "x" }}
+            </button>
+        </div>
+        <div class="mobile-toc-panel-content" id="mobile-toc-panel-content">
+            {{/* TOC will be cloned here for panel view */}}
+        </div>
+    </div>
+</div>

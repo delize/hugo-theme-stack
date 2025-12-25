@@ -1,0 +1,11 @@
+{{/* Mobile TOC - collapsible container at article top */}}
+<div class="mobile-toc-container" id="mobile-toc-container">
+    <button class="mobile-toc-header" id="mobile-toc-header" aria-expanded="false" aria-controls="mobile-toc-content">
+        <span class="mobile-toc-icon">{{ partial "helper/icon" "hash" }}</span>
+        <span class="mobile-toc-title">{{ T "article.tableOfContents" }}</span>
+        <span class="mobile-toc-chevron">{{ partial "helper/icon" "chevron-down" }}</span>
+    </button>
+    <div class="mobile-toc-content" id="mobile-toc-content" aria-hidden="true">
+        {{/* TOC widget will be moved here by JavaScript on mobile */}}
+    </div>
+</div>

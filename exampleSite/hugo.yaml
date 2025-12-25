@@ -94,6 +94,10 @@ params:
         math: false
         toc: true
         readingTime: true
+        mobileTOC:
+            collapsible: true  # Collapsible TOC at top of article (mobile only)
+            fab: true          # Floating action button (mobile only)
+            swipe: true        # Swipe from right edge to open/close panel (mobile only)
         license:
             enabled: true
             default: Licensed under CC BY-NC-SA 4.0
