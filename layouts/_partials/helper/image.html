@@ -20,7 +20,9 @@
     {{ if not (in (slice "https" "http") $url.Scheme) }}
         {{/* Local image */}}
         {{ $resource = .Resources.Get (printf "%s" (.Image | safeURL)) }}
-        {{ $permalink = $resource.RelPermalink }}
+        {{ with $resource }}
+            {{ $permalink = .RelPermalink }}
+        {{ end }}
     {{ else }}
         {{/* Remote image */}}
         {{ with try (resources.GetRemote $url) }}
