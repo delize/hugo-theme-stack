@@ -102,7 +102,7 @@
 }
 
 .article-category,
-.article-tags {
+.article-tags:not(.inline-meta) {
     display: flex;
     gap: var(--spacing-sm);
     flex-wrap: wrap;
