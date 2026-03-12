@@ -175,16 +175,13 @@ class CookieConsent {
     }
 
     private dispatchConsentEvent(): void {
-        const event = new CustomEvent('onCookieConsentChange', {
-            detail: this.state
-        });
+        const detail = this.state ?? { necessary: true, analytics: false, functional: false, timestamp: 0 };
+        const event = new CustomEvent('onCookieConsentChange', { detail });
         window.dispatchEvent(event);
 
         // Set data attributes on document for CSS-based control
-        if (this.state) {
-            document.documentElement.dataset.consentAnalytics = String(this.state.analytics);
-            document.documentElement.dataset.consentFunctional = String(this.state.functional);
-        }
+        document.documentElement.dataset.consentAnalytics = String(this.state?.analytics ?? false);
+        document.documentElement.dataset.consentFunctional = String(this.state?.functional ?? false);
     }
 
     // Public API
